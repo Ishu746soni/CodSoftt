@@ -1,0 +1,99 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+class ContactManager:
+    def __init__(self, root):
+        self.contacts = []
+        self.root = root
+        self.root.title("Contact Manager")
+        self.create_ui()
+
+    def create_ui(self):
+        self.contact_listbox = tk.Listbox(self.root, width=50, height=20)
+        self.contact_listbox.pack(pady=10)
+
+        self.view_button = tk.Button(self.root, text="View Contacts", command=self.view_contacts)
+        self.view_button.pack(pady=5)
+
+        self.add_button = tk.Button(self.root, text="Add Contact", command=self.add_contact)
+        self.add_button.pack(pady=5)
+
+        self.search_button = tk.Button(self.root, text="Search Contact", command=self.search_contact)
+        self.search_button.pack(pady=5)
+
+        self.update_button = tk.Button(self.root, text="Update Contact", command=self.update_contact)
+        self.update_button.pack(pady=5)
+
+        self.delete_button = tk.Button(self.root, text="Delete Contact", command=self.delete_contact)
+        self.delete_button.pack(pady=5)
+
+    def get_contact_details(self, contact=None):
+        name = simpledialog.askstring("Input", "Enter contact name:", initialvalue=contact['name'] if contact else '')
+        phone = simpledialog.askstring("Input", "Enter contact phone number:", initialvalue=contact['phone'] if contact else '')
+        email = simpledialog.askstring("Input", "Enter contact email:", initialvalue=contact['email'] if contact else '')
+        address = simpledialog.askstring("Input", "Enter contact address:", initialvalue=contact['address'] if contact else '')
+        return name, phone, email, address
+
+    def add_contact(self):
+        name, phone, email, address = self.get_contact_details()
+        if name and phone and email and address:
+            self.contacts.append({
+                "name": name,
+                "phone": phone,
+                "email": email,
+                "address": address
+            })
+            messagebox.showinfo("Success", "Contact added successfully!")
+        else:
+            messagebox.showerror("Error", "All fields are required to add a contact.")
+
+    def view_contacts(self):
+        self.contact_listbox.delete(0, tk.END)
+        for contact in self.contacts:
+            self.contact_listbox.insert(tk.END, f"{contact['name']} - {contact['phone']}")
+
+    def search_contact(self):
+        query = simpledialog.askstring("Search", "Enter name or phone number to search:")
+        if query:
+            self.contact_listbox.delete(0, tk.END)
+            for contact in self.contacts:
+                if query.lower() in contact['name'].lower() or query in contact['phone']:
+                    self.contact_listbox.insert(tk.END, f"{contact['name']} - {contact['phone']}")
+        else:
+            messagebox.showerror("Error", "Please enter a valid search query.")
+
+    def update_contact(self):
+        selected = self.contact_listbox.curselection()
+        if selected:
+            index = selected[0]
+            contact = self.contacts[index]
+            name, phone, email, address = self.get_contact_details(contact)
+            if name and phone and email and address:
+                self.contacts[index] = {
+                    "name": name,
+                    "phone": phone,
+                    "email": email,
+                    "address": address
+                }
+                messagebox.showinfo("Success", "Contact updated successfully!")
+                self.view_contacts()
+            else:
+                messagebox.showerror("Error", "All fields are required to update a contact.")
+        else:
+            messagebox.showerror("Error", "Please select a contact to update.")
+
+    def delete_contact(self):
+        selected = self.contact_listbox.curselection()
+        if selected:
+            index = selected[0]
+            del self.contacts[index]
+            messagebox.showinfo("Success", "Contact deleted successfully!")
+            self.view_contacts()
+        else:
+            messagebox.showerror("Error", "Please select a contact to delete.")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ContactManager(root)
+    root.mainloop()
