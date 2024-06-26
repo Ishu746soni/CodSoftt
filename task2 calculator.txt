@@ -1,0 +1,58 @@
+class calculator:
+    def add(self,x,y):
+        return x+y
+    
+    def sub(self,x,y):
+        return x-y
+    
+    def mul(self,x,y):
+        return x*y
+    
+    def div(self,x,y):
+        if y==0:
+            return("invalid value of y!!")
+        else:
+            return x/y
+        
+    def user_choice(self):
+        print("select operator from the list:")
+        print("1. Addition")
+        print("2. Subtarction")
+        print("3. Multiplication")
+        print("4. Division")
+        return input("Enter your choice from the above list:")
+    
+    def get_number(self):
+        num1=float(input("enter the number:"))
+        num2=float(input("enter the number:"))
+        return num1,num2
+    
+    def calculate(self):
+        while True:
+            choice=self.user_choice()
+            if choice in ['1','2','3','4']:
+                num1,num2=self.get_number()
+
+                if choice == '1':
+                    print(f"The addition of {num1} and {num2} results to be", self.add(num1,num2))
+
+                elif choice == '2':
+                    print(f"The subtarction of {num1} and {num2} results to be", self.sub(num1,num2))
+
+                elif choice == '3':
+                    print(f"The multiplication of {num1} and {num2} results to be", self.mul(num1,num2))
+
+                elif choice == '4':
+                    print(f"The division of {num1} and {num2} results to be", self.div(num1,num2))
+
+                else:
+                    print("You choose the wrong choice!! Wanna Try it again....")
+
+                next_cal=input("Do you want to continue?? (yes/no):")
+                if next_cal != 'yes':
+                    print("-------END OF TASK-------")
+                    break
+
+if __name__== "__main__":
+    c=calculator()
+    c.calculate()
